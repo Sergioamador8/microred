@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 import Signature from 'react-native-signature-canvas';
+import * as FileSystem from 'expo-file-system';
 
 const ProfileScreen = () => {
   const [signature, setSignature] = useState(null);
@@ -12,10 +13,19 @@ const ProfileScreen = () => {
 
   const handleClear = () => {
     signRef.current.clearSignature();
+    setSignature(null); // Clear the signature state
   };
 
-  const handleSave = () => {
-    signRef.current.readSignature();
+  const handleSave = async () => {
+    if (!signature) {
+      Alert.alert('Error', 'No hay firma para guardar');
+      return;
+    }
+    const fileUri = FileSystem.documentDirectory + 'signature.png';
+    await FileSystem.writeAsStringAsync(fileUri, signature.replace('data:image/png;base64,', ''), {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+    Alert.alert('Firma guardada', `La firma ha sido guardada en ${fileUri}`);
   };
 
   return (
@@ -36,7 +46,6 @@ const ProfileScreen = () => {
         <Signature
           ref={signRef}
           onOK={handleSignature}
-          onEmpty={handleClear}
           descriptionText="Firma"
           clearText="Limpiar"
           confirmText="Guardar"
@@ -48,6 +57,9 @@ const ProfileScreen = () => {
       ) : null}
       <TouchableOpacity style={styles.clearButton} onPress={handleClear}>
         <Text style={styles.clearButtonText}>Limpiar</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+        <Text style={styles.saveButtonText}>Guardar Firma</Text>
       </TouchableOpacity>
     </View>
   );
@@ -67,6 +79,8 @@ const styles = StyleSheet.create({
   signatureImage: { width: '100%', height: 200, resizeMode: 'contain', marginTop: 20 },
   clearButton: { marginTop: 10, padding: 10, backgroundColor: '#dc3545', borderRadius: 5 },
   clearButtonText: { color: '#fff', textAlign: 'center' },
+  saveButton: { marginTop: 10, padding: 10, backgroundColor: '#28a745', borderRadius: 5 },
+  saveButtonText: { color: '#fff', textAlign: 'center' },
 });
 
 export default ProfileScreen;

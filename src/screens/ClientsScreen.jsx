@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Modal } from 'react-native';
 
 const ClientsScreen = () => {
-  const [showForm, setShowForm] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     nombreComercial: '',
     giro: '',
@@ -23,6 +23,12 @@ const ClientsScreen = () => {
     contactoCelular: '',
     contactoCorreo: '',
   });
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [data, setData] = useState([
+    { codigo: '001', nombre: 'Juan Pérez', empresa: 'ACME Inc.', contacto: 'Juan Pérez', celular: '123-456-7890' },
+    { codigo: '002', nombre: 'María García', empresa: 'XYZ Corp.', contacto: 'María García', celular: '098-765-4321' },
+    { codigo: '003', nombre: 'Pedro Martínez', empresa: 'ABC Co.', contacto: 'Pedro Martínez', celular: '321-654-9870' },
+  ]);
 
   const handleInputChange = (name, value) => {
     setFormData({
@@ -32,18 +38,58 @@ const ClientsScreen = () => {
   };
 
   const handleAddClient = () => {
-    // Aquí puedes manejar el envío del formulario, por ejemplo, guardarlo en una base de datos.
-    console.log(formData);
-    setShowForm(false);
+    if (editingIndex !== null) {
+      const newData = [...data];
+      newData[editingIndex] = {
+        codigo: newData[editingIndex].codigo,
+        ...formData,
+      };
+      setData(newData);
+    } else {
+      setData([
+        ...data,
+        {
+          codigo: (data.length + 1).toString().padStart(3, '0'),
+          ...formData,
+        },
+      ]);
+    }
+    setFormData({
+      nombreComercial: '',
+      giro: '',
+      telefono: '',
+      correo: '',
+      calle: '',
+      numero: '',
+      colonia: '',
+      codigoPostal: '',
+      pais: '',
+      estado: '',
+      ciudad: '',
+      notas: '',
+      descuento: '',
+      contactoNombre: '',
+      contactoTitulo: '',
+      contactoArea: '',
+      contactoCelular: '',
+      contactoCorreo: '',
+    });
+    setEditingIndex(null);
+    setShowModal(false);
   };
 
-  const tableHead = ['Código', 'Nombre', 'Empresa', 'Contacto', 'Celular'];
-  const tableData = [
-    ['001', 'Juan Pérez', 'ACME Inc.', 'Juan Pérez', '123-456-7890'],
-    ['002', 'María García', 'XYZ Corp.', 'María García', '098-765-4321'],
-    ['003', 'Pedro Martínez', 'ABC Co.', 'Pedro Martínez', '321-654-9870'],
-    // Agrega más filas según necesites
-  ];
+  const handleEditClient = (index) => {
+    const client = data[index];
+    setFormData(client);
+    setEditingIndex(index);
+    setShowModal(true);
+  };
+
+  const handleDeleteClient = (index) => {
+    setData(data.filter((_, i) => i !== index));
+  };
+
+  const tableHead = ['Código', 'Nombre', 'Empresa', 'Contacto', 'Celular', 'Acciones'];
 
   const styles = StyleSheet.create({
     container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
@@ -51,64 +97,59 @@ const ClientsScreen = () => {
     text: { margin: 6 },
     title: { fontSize: 20, fontWeight: 'bold', marginBottom: 10 },
     row: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#c8e1ff' },
-    cell: { flex: 1, padding: 10, borderWidth: 1, borderColor: '#c8e1ff' },
+    cell: { flex: 1, padding: 10, borderWidth: 1, borderColor: '#c8e1ff', textAlign: 'center' },
+    actionsCell: { flexDirection: 'row', justifyContent: 'space-around', padding: 10, borderWidth: 1, borderColor: '#c8e1ff' },
     addButton: { marginTop: 20, padding: 10, backgroundColor: '#007bff', borderRadius: 5 },
     addButtonText: { color: '#fff', textAlign: 'center' },
-    editButton: { marginTop: 10, padding: 10, backgroundColor: '#ffc107', borderRadius: 5 },
+    editButton: { padding: 10, backgroundColor: '#ffc107', borderRadius: 5 },
     editButtonText: { color: '#fff', textAlign: 'center' },
-    deleteButton: { marginTop: 10, padding: 10, backgroundColor: '#dc3545', borderRadius: 5 },
+    deleteButton: { padding: 10, backgroundColor: '#dc3545', borderRadius: 5 },
     deleteButtonText: { color: '#fff', textAlign: 'center' },
-    formContainer: { marginTop: 20, padding: 10, borderWidth: 1, borderColor: '#c8e1ff', borderRadius: 5 },
+    modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' },
+    modalContent: { width: '90%', maxHeight: '80%', padding: 20, backgroundColor: '#fff', borderRadius: 10 },
     formField: { marginBottom: 10 },
     formLabel: { fontSize: 16, marginBottom: 5 },
-    formInput: { borderWidth: 1, borderColor: '#c8e1ff', padding: 8, borderRadius: 5 },
-    submitButton: { marginTop: 10, padding: 10, backgroundColor: '#28a745', borderRadius: 5 },
+    formInput: { borderWidth: 1, borderColor: '#ccc', padding: 8, borderRadius: 5 },
+    submitButton: { marginTop: 20, padding: 10, backgroundColor: '#007bff', borderRadius: 5 },
     submitButtonText: { color: '#fff', textAlign: 'center' },
-    tabContainer: { flexDirection: 'row', marginBottom: 10 },
-    tabButton: { flex: 1, padding: 10, alignItems: 'center', borderWidth: 1, borderColor: '#c8e1ff' },
-    activeTab: { backgroundColor: '#007bff', color: '#fff' },
-    inactiveTab: { backgroundColor: '#fff', color: '#000' },
   });
-
-  const [activeTab, setActiveTab] = useState('general');
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Listado de Clientes</Text>
-      <View style={styles.head}>
-        {tableHead.map((header, index) => (
-          <Text key={index} style={styles.cell}>{header}</Text>
-        ))}
-      </View>
-      {tableData.map((rowData, rowIndex) => (
-        <View key={rowIndex} style={styles.row}>
-          {rowData.map((cellData, cellIndex) => (
-            <Text key={cellIndex} style={styles.cell}>{cellData}</Text>
+      <ScrollView horizontal>
+        <View>
+          <View style={styles.head}>
+            {tableHead.map((header, index) => (
+              <Text key={index} style={styles.cell}>{header}</Text>
+            ))}
+          </View>
+          {data.map((rowData, rowIndex) => (
+            <View key={rowIndex} style={styles.row}>
+              {Object.values(rowData).map((cellData, cellIndex) => (
+                <Text key={cellIndex} style={styles.cell}>{cellData}</Text>
+              ))}
+              <View style={styles.actionsCell}>
+                <TouchableOpacity style={styles.editButton} onPress={() => handleEditClient(rowIndex)}>
+                  <Text style={styles.editButtonText}>Editar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteClient(rowIndex)}>
+                  <Text style={styles.deleteButtonText}>Eliminar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           ))}
         </View>
-      ))}
-      <TouchableOpacity style={styles.addButton} onPress={() => setShowForm(true)}>
+      </ScrollView>
+      <TouchableOpacity style={styles.addButton} onPress={() => setShowModal(true)}>
         <Text style={styles.addButtonText}>Agregar Cliente</Text>
       </TouchableOpacity>
-      {showForm && (
-        <View style={styles.formContainer}>
-          <Text style={styles.title}>Nuevo Cliente</Text>
-          <View style={styles.tabContainer}>
-            <TouchableOpacity
-              style={[styles.tabButton, activeTab === 'general' ? styles.activeTab : styles.inactiveTab]}
-              onPress={() => setActiveTab('general')}
-            >
-              <Text style={activeTab === 'general' ? { color: '#fff' } : { color: '#000' }}>Datos Generales</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.tabButton, activeTab === 'additional' ? styles.activeTab : styles.inactiveTab]}
-              onPress={() => setActiveTab('additional')}
-            >
-              <Text style={activeTab === 'additional' ? { color: '#fff' } : { color: '#000' }}>Más Información</Text>
-            </TouchableOpacity>
-          </View>
-          {activeTab === 'general' && (
-            <View>
+
+      <Modal visible={showModal} transparent={true} animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.title}>{editingIndex !== null ? 'Editar Cliente' : 'Nuevo Cliente'}</Text>
+            <ScrollView>
               <View style={styles.formField}>
                 <Text style={styles.formLabel}>Nombre Comercial *</Text>
                 <TextInput
@@ -197,10 +238,6 @@ const ClientsScreen = () => {
                   onChangeText={(value) => handleInputChange('ciudad', value)}
                 />
               </View>
-            </View>
-          )}
-          {activeTab === 'additional' && (
-            <View>
               <View style={styles.formField}>
                 <Text style={styles.formLabel}>Notas</Text>
                 <TextInput
@@ -258,29 +295,16 @@ const ClientsScreen = () => {
                   onChangeText={(value) => handleInputChange('contactoCorreo', value)}
                 />
               </View>
-              <TouchableOpacity style={styles.submitButton}>
-                <Text style={styles.submitButtonText}>Agregar Contacto</Text>
+              <TouchableOpacity style={styles.submitButton} onPress={handleAddClient}>
+                <Text style={styles.submitButtonText}>{editingIndex !== null ? 'Actualizar Cliente' : 'Guardar Cliente'}</Text>
               </TouchableOpacity>
-              <Text style={styles.formLabel}>Documentos</Text>
-              <TouchableOpacity style={styles.submitButton}>
-                <Text style={styles.submitButtonText}>Agregar Documento</Text>
+              <TouchableOpacity onPress={() => { setShowModal(false); setEditingIndex(null); }} style={{ marginTop: 10 }}>
+                <Text style={{ color: '#007bff', textAlign: 'center' }}>Cerrar</Text>
               </TouchableOpacity>
-            </View>
-          )}
-          <TouchableOpacity style={styles.submitButton} onPress={handleAddClient}>
-            <Text style={styles.submitButtonText}>Guardar Cliente</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setShowForm(false)} style={{ marginTop: 10 }}>
-            <Text style={{ color: '#007bff', textAlign: 'center' }}>Cerrar</Text>
-          </TouchableOpacity>
+            </ScrollView>
+          </View>
         </View>
-      )}
-      <TouchableOpacity style={styles.editButton}>
-        <Text style={styles.editButtonText}>Editar Cliente</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.deleteButton}>
-        <Text style={styles.deleteButtonText}>Eliminar Cliente</Text>
-      </TouchableOpacity>
+      </Modal>
     </ScrollView>
   );
 };

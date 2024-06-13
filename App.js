@@ -6,7 +6,6 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import LoginScreen from './src/screens/LoginScreen';
 import HomeScreen from './src/screens/HomeScreen';
-import SettingsScreen from './src/screens/SettingsScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import ClientsScreen from './src/screens/ClientsScreen';
 import ServiceOrdersScreen from './src/screens/ServiceOrdersScreen';
