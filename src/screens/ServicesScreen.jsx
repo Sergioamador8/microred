@@ -19,6 +19,11 @@ const ServicesScreen = () => {
   ]);
 
   const handleInputChange = (name, value) => {
+    // Validar campos numéricos y de precio
+    if (['precio', 'codigoSat'].includes(name)) {
+      const numberRegex = /^[0-9]*$/;
+      if (!numberRegex.test(value)) return;
+    }
     setFormData({
       ...formData,
       [name]: value,
@@ -85,11 +90,11 @@ const ServicesScreen = () => {
     container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
     head: { height: 40, backgroundColor: '#f1f8ff', flexDirection: 'row' },
     text: { margin: 6 },
-    title: { fontSize: 20, fontWeight: 'bold', marginBottom: 10 },
+    title: { fontSize: 20, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' },
     row: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#c8e1ff' },
-    cell: { flex: 1, padding: 10, borderWidth: 1, borderColor: '#c8e1ff', textAlign: 'center' },
-    actionsCell: { flexDirection: 'row', justifyContent: 'space-around', padding: 10, borderWidth: 1, borderColor: '#c8e1ff' },
-    addButton: { marginTop: 20, padding: 10, backgroundColor: '#007bff', borderRadius: 5 },
+    cell: { padding: 10, borderWidth: 1, borderColor: '#c8e1ff', textAlign: 'center', width: 100 },
+    actionsCell: { flexDirection: 'row', justifyContent: 'space-around', padding: 10, borderWidth: 1, borderColor: '#c8e1ff', width: 150 },
+    addButton: { marginTop: 20, padding: 10, backgroundColor: '#007bff', borderRadius: 5, alignSelf: 'center' },
     addButtonText: { color: '#fff', textAlign: 'center' },
     editButton: { padding: 10, backgroundColor: '#ffc107', borderRadius: 5 },
     editButtonText: { color: '#fff', textAlign: 'center' },
@@ -145,6 +150,7 @@ const ServicesScreen = () => {
                 style={styles.formInput}
                 value={formData.nombre}
                 onChangeText={(value) => handleInputChange('nombre', value)}
+                placeholder="Nombre del Servicio"
               />
             </View>
             <View style={styles.formField}>
@@ -153,6 +159,7 @@ const ServicesScreen = () => {
                 style={styles.formInput}
                 value={formData.categoria}
                 onChangeText={(value) => handleInputChange('categoria', value)}
+                placeholder="Categoría del Servicio"
               />
             </View>
             <View style={styles.formField}>
@@ -161,14 +168,17 @@ const ServicesScreen = () => {
                 style={styles.formInput}
                 value={formData.precio}
                 onChangeText={(value) => handleInputChange('precio', value)}
+                keyboardType="numeric"
+                placeholder="Precio del Servicio"
               />
             </View>
             <View style={styles.formField}>
-              <Text style={styles.formLabel}>Descripcion*</Text>
+              <Text style={styles.formLabel}>Descripción*</Text>
               <TextInput
                 style={styles.formInput}
                 value={formData.descripcion}
                 onChangeText={(value) => handleInputChange('descripcion', value)}
+                placeholder="Descripción del Servicio"
               />
             </View>
             <View style={styles.formField}>
@@ -177,6 +187,7 @@ const ServicesScreen = () => {
                 style={styles.formInput}
                 value={formData.unidadSat}
                 onChangeText={(value) => handleInputChange('unidadSat', value)}
+                placeholder="Unidad SAT"
               />
             </View>
             <View style={styles.formField}>
@@ -185,6 +196,8 @@ const ServicesScreen = () => {
                 style={styles.formInput}
                 value={formData.codigoSat}
                 onChangeText={(value) => handleInputChange('codigoSat', value)}
+                keyboardType="numeric"
+                placeholder="Código SAT"
               />
             </View>
             <TouchableOpacity style={styles.saveButton} onPress={handleAddService}>

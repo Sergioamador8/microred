@@ -31,6 +31,15 @@ const ClientsScreen = () => {
   ]);
 
   const handleInputChange = (name, value) => {
+    // Validar números de teléfono y campos numéricos
+    if (name === 'telefono' || name === 'contactoCelular') {
+      const phoneRegex = /^[0-9]*$/;
+      if (!phoneRegex.test(value)) return;
+    }
+    if (name === 'codigoPostal' || name === 'numero' || name === 'descuento') {
+      const numberRegex = /^[0-9]*$/;
+      if (!numberRegex.test(value)) return;
+    }
     setFormData({
       ...formData,
       [name]: value,
@@ -95,11 +104,12 @@ const ClientsScreen = () => {
     container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
     head: { height: 40, backgroundColor: '#f1f8ff', flexDirection: 'row' },
     text: { margin: 6 },
-    title: { fontSize: 20, fontWeight: 'bold', marginBottom: 10 },
+    title: { fontSize: 20, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' },
     row: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#c8e1ff' },
-    cell: { flex: 1, padding: 10, borderWidth: 1, borderColor: '#c8e1ff', textAlign: 'center' },
-    actionsCell: { flexDirection: 'row', justifyContent: 'space-around', padding: 10, borderWidth: 1, borderColor: '#c8e1ff' },
-    addButton: { marginTop: 20, padding: 10, backgroundColor: '#007bff', borderRadius: 5 },
+    cell: { padding: 10, borderWidth: 1, borderColor: '#c8e1ff', textAlign: 'center', width: 100 },
+    cellWide: { padding: 10, borderWidth: 1, borderColor: '#c8e1ff', textAlign: 'center', width: 150 },
+    actionsCell: { flexDirection: 'row', justifyContent: 'space-around', padding: 10, borderWidth: 1, borderColor: '#c8e1ff', width: 150 },
+    addButton: { marginTop: 20, padding: 10, backgroundColor: '#007bff', borderRadius: 5, alignSelf: 'center' },
     addButtonText: { color: '#fff', textAlign: 'center' },
     editButton: { padding: 10, backgroundColor: '#ffc107', borderRadius: 5 },
     editButtonText: { color: '#fff', textAlign: 'center' },
@@ -156,6 +166,7 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.nombreComercial}
                   onChangeText={(value) => handleInputChange('nombreComercial', value)}
+                  placeholder="Nombre Comercial del Cliente"
                 />
               </View>
               <View style={styles.formField}>
@@ -164,6 +175,7 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.giro}
                   onChangeText={(value) => handleInputChange('giro', value)}
+                  placeholder="Giro del Cliente"
                 />
               </View>
               <View style={styles.formField}>
@@ -172,6 +184,8 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.telefono}
                   onChangeText={(value) => handleInputChange('telefono', value)}
+                  keyboardType="numeric"
+                  placeholder="Número de Teléfono o Celular"
                 />
               </View>
               <View style={styles.formField}>
@@ -180,6 +194,8 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.correo}
                   onChangeText={(value) => handleInputChange('correo', value)}
+                  keyboardType="email-address"
+                  placeholder="Correo Electrónico"
                 />
               </View>
               <View style={styles.formField}>
@@ -188,6 +204,7 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.calle}
                   onChangeText={(value) => handleInputChange('calle', value)}
+                  placeholder="Calle"
                 />
               </View>
               <View style={styles.formField}>
@@ -196,6 +213,8 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.numero}
                   onChangeText={(value) => handleInputChange('numero', value)}
+                  keyboardType="numeric"
+                  placeholder="Número"
                 />
               </View>
               <View style={styles.formField}>
@@ -204,6 +223,7 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.colonia}
                   onChangeText={(value) => handleInputChange('colonia', value)}
+                  placeholder="Colonia"
                 />
               </View>
               <View style={styles.formField}>
@@ -212,6 +232,8 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.codigoPostal}
                   onChangeText={(value) => handleInputChange('codigoPostal', value)}
+                  keyboardType="numeric"
+                  placeholder="Código Postal"
                 />
               </View>
               <View style={styles.formField}>
@@ -220,6 +242,7 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.pais}
                   onChangeText={(value) => handleInputChange('pais', value)}
+                  placeholder="País"
                 />
               </View>
               <View style={styles.formField}>
@@ -228,6 +251,7 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.estado}
                   onChangeText={(value) => handleInputChange('estado', value)}
+                  placeholder="Estado"
                 />
               </View>
               <View style={styles.formField}>
@@ -236,6 +260,7 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.ciudad}
                   onChangeText={(value) => handleInputChange('ciudad', value)}
+                  placeholder="Ciudad"
                 />
               </View>
               <View style={styles.formField}>
@@ -244,6 +269,7 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.notas}
                   onChangeText={(value) => handleInputChange('notas', value)}
+                  placeholder="Notas"
                 />
               </View>
               <View style={styles.formField}>
@@ -252,6 +278,8 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.descuento}
                   onChangeText={(value) => handleInputChange('descuento', value)}
+                  keyboardType="numeric"
+                  placeholder="Descuento %"
                 />
               </View>
               <Text style={styles.formLabel}>CONTACTOS</Text>
@@ -261,6 +289,7 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.contactoNombre}
                   onChangeText={(value) => handleInputChange('contactoNombre', value)}
+                  placeholder="Nombre del Contacto"
                 />
               </View>
               <View style={styles.formField}>
@@ -269,6 +298,7 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.contactoTitulo}
                   onChangeText={(value) => handleInputChange('contactoTitulo', value)}
+                  placeholder="Título del Contacto"
                 />
               </View>
               <View style={styles.formField}>
@@ -277,6 +307,7 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.contactoArea}
                   onChangeText={(value) => handleInputChange('contactoArea', value)}
+                  placeholder="Área o Puesto del Contacto"
                 />
               </View>
               <View style={styles.formField}>
@@ -285,6 +316,8 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.contactoCelular}
                   onChangeText={(value) => handleInputChange('contactoCelular', value)}
+                  keyboardType="numeric"
+                  placeholder="Número de Celular del Contacto"
                 />
               </View>
               <View style={styles.formField}>
@@ -293,6 +326,8 @@ const ClientsScreen = () => {
                   style={styles.formInput}
                   value={formData.contactoCorreo}
                   onChangeText={(value) => handleInputChange('contactoCorreo', value)}
+                  keyboardType="email-address"
+                  placeholder="Correo Electrónico del Contacto"
                 />
               </View>
               <TouchableOpacity style={styles.submitButton} onPress={handleAddClient}>

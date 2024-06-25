@@ -22,12 +22,17 @@ const ProductsScreen = () => {
   });
   const [editingIndex, setEditingIndex] = useState(null);
   const [data, setData] = useState([
-    { codigo: '001', unidad: 'kg', nombre: 'Manzanas', precio: '$2.50', stock: '100', proveedor: 'Proveedor A' },
-    { codigo: '002', unidad: 'lt', nombre: 'Leche', precio: '$1.20', stock: '50', proveedor: 'Proveedor B' },
-    { codigo: '003', unidad: 'pz', nombre: 'Pan', precio: '$0.80', stock: '200', proveedor: 'Proveedor C' },
+    { codigo: '001', unidad: 'pz', nombre: 'Smartphone', precio: '$300', stock: '50', proveedor: 'Proveedor A' },
+    { codigo: '002', unidad: 'pz', nombre: 'Laptop', precio: '$700', stock: '30', proveedor: 'Proveedor B' },
+    { codigo: '003', unidad: 'pz', nombre: 'Tablet', precio: '$200', stock: '100', proveedor: 'Proveedor C' },
   ]);
 
   const handleInputChange = (name, value) => {
+    // Validar campos numéricos y de precio
+    if (['precio', 'puntoPedido', 'stockInicial', 'stockMinimo', 'codigoSat', 'SKU'].includes(name)) {
+      const numberRegex = /^[0-9]*$/;
+      if (!numberRegex.test(value)) return;
+    }
     setFormData({
       ...formData,
       [name]: value,
@@ -89,12 +94,13 @@ const ProductsScreen = () => {
     container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
     head: { height: 40, backgroundColor: '#f1f8ff', flexDirection: 'row' },
     text: { margin: 6 },
-    title: { fontSize: 20, fontWeight: 'bold', marginBottom: 10 },
+    title: { fontSize: 20, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' },
     row: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#c8e1ff' },
-    cell: { flex: 1, padding: 10, borderWidth: 1, borderColor: '#c8e1ff' },
-    addButton: { marginTop: 20, padding: 10, backgroundColor: '#007bff', borderRadius: 5 },
+    cell: { padding: 10, borderWidth: 1, borderColor: '#c8e1ff', textAlign: 'center', width: 100 },
+    actionsCell: { flexDirection: 'row', justifyContent: 'space-around', padding: 10, borderWidth: 1, borderColor: '#c8e1ff', width: 150 },
+    addButton: { marginTop: 20, padding: 10, backgroundColor: '#007bff', borderRadius: 5, alignSelf: 'center' },
     addButtonText: { color: '#fff', textAlign: 'center' },
-    editButton: { padding: 10, backgroundColor: '#ffc107', borderRadius: 5, marginHorizontal: 5 },
+    editButton: { padding: 10, backgroundColor: '#ffc107', borderRadius: 5 },
     editButtonText: { color: '#fff', textAlign: 'center' },
     deleteButton: { padding: 10, backgroundColor: '#dc3545', borderRadius: 5 },
     deleteButtonText: { color: '#fff', textAlign: 'center' },
@@ -122,7 +128,7 @@ const ProductsScreen = () => {
               {Object.values(rowData).map((cellData, cellIndex) => (
                 <Text key={cellIndex} style={styles.cell}>{cellData}</Text>
               ))}
-              <View style={{ flexDirection: 'row' }}>
+              <View style={styles.actionsCell}>
                 <TouchableOpacity style={styles.editButton} onPress={() => handleEditProduct(rowIndex)}>
                   <Text style={styles.editButtonText}>Editar</Text>
                 </TouchableOpacity>
@@ -148,6 +154,7 @@ const ProductsScreen = () => {
                 style={styles.formInput}
                 value={formData.categoria}
                 onChangeText={(value) => handleInputChange('categoria', value)}
+                placeholder="Categoría del Producto"
               />
             </View>
             <View style={styles.formField}>
@@ -156,6 +163,7 @@ const ProductsScreen = () => {
                 style={styles.formInput}
                 value={formData.nombre}
                 onChangeText={(value) => handleInputChange('nombre', value)}
+                placeholder="Nombre del Producto"
               />
             </View>
             <View style={styles.formField}>
@@ -164,6 +172,7 @@ const ProductsScreen = () => {
                 style={styles.formInput}
                 value={formData.descripcion}
                 onChangeText={(value) => handleInputChange('descripcion', value)}
+                placeholder="Descripción del Producto"
               />
             </View>
             <View style={styles.formField}>
@@ -172,6 +181,8 @@ const ProductsScreen = () => {
                 style={styles.formInput}
                 value={formData.precio}
                 onChangeText={(value) => handleInputChange('precio', value)}
+                keyboardType="numeric"
+                placeholder="Precio del Producto"
               />
             </View>
             <View style={styles.formField}>
@@ -180,6 +191,7 @@ const ProductsScreen = () => {
                 style={styles.formInput}
                 value={formData.modelo}
                 onChangeText={(value) => handleInputChange('modelo', value)}
+                placeholder="Modelo del Producto"
               />
             </View>
             <View style={styles.formField}>
@@ -188,6 +200,7 @@ const ProductsScreen = () => {
                 style={styles.formInput}
                 value={formData.unidad}
                 onChangeText={(value) => handleInputChange('unidad', value)}
+                placeholder="Unidad de Medida"
               />
             </View>
             <View style={styles.formField}>
@@ -196,6 +209,7 @@ const ProductsScreen = () => {
                 style={styles.formInput}
                 value={formData.proveedor}
                 onChangeText={(value) => handleInputChange('proveedor', value)}
+                placeholder="Proveedor del Producto"
               />
             </View>
             <View style={styles.formField}>
@@ -204,6 +218,7 @@ const ProductsScreen = () => {
                 style={styles.formInput}
                 value={formData.categoriaFabrica}
                 onChangeText={(value) => handleInputChange('categoriaFabrica', value)}
+                placeholder="Categoría de Fábrica"
               />
             </View>
             <View style={styles.formField}>
@@ -212,6 +227,7 @@ const ProductsScreen = () => {
                 style={styles.formInput}
                 value={formData.marca}
                 onChangeText={(value) => handleInputChange('marca', value)}
+                placeholder="Marca del Producto"
               />
             </View>
             <View style={styles.formField}>
@@ -220,6 +236,7 @@ const ProductsScreen = () => {
                 style={styles.formInput}
                 value={formData.SKU}
                 onChangeText={(value) => handleInputChange('SKU', value)}
+                placeholder="SKU del Producto"
               />
             </View>
             <View style={styles.formField}>
@@ -228,6 +245,8 @@ const ProductsScreen = () => {
                 style={styles.formInput}
                 value={formData.puntoPedido}
                 onChangeText={(value) => handleInputChange('puntoPedido', value)}
+                keyboardType="numeric"
+                placeholder="Punto de Pedido"
               />
             </View>
             <View style={styles.formField}>
@@ -236,6 +255,8 @@ const ProductsScreen = () => {
                 style={styles.formInput}
                 value={formData.stockInicial}
                 onChangeText={(value) => handleInputChange('stockInicial', value)}
+                keyboardType="numeric"
+                placeholder="Stock Inicial"
               />
             </View>
             <View style={styles.formField}>
@@ -244,6 +265,8 @@ const ProductsScreen = () => {
                 style={styles.formInput}
                 value={formData.stockMinimo}
                 onChangeText={(value) => handleInputChange('stockMinimo', value)}
+                keyboardType="numeric"
+                placeholder="Stock Mínimo"
               />
             </View>
             <View style={styles.formField}>
@@ -252,6 +275,8 @@ const ProductsScreen = () => {
                 style={styles.formInput}
                 value={formData.codigoSat}
                 onChangeText={(value) => handleInputChange('codigoSat', value)}
+                keyboardType="numeric"
+                placeholder="Código SAT"
               />
             </View>
             <View style={styles.formField}>
@@ -260,6 +285,7 @@ const ProductsScreen = () => {
                 style={styles.formInput}
                 value={formData.unidadSat}
                 onChangeText={(value) => handleInputChange('unidadSat', value)}
+                placeholder="Unidad SAT"
               />
             </View>
             <TouchableOpacity style={styles.submitButton} onPress={handleAddProduct}>

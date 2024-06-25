@@ -17,7 +17,14 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.menuIcon}>☰</Text>
         </TouchableOpacity>
         <Text style={styles.appbarTitle}>Microred</Text>
-        <View style={styles.rightSpace}></View>
+        <View style={styles.rightSpace}>
+          <TouchableOpacity onPress={() => { /* lógica para la campana */ }}>
+            <Text style={styles.icon}>🔔</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => { /* lógica para la configuración */ }}>
+            <Text style={styles.icon}>⚙️</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Contenido de la pantalla */}
@@ -28,6 +35,23 @@ const HomeScreen = ({ navigation }) => {
           style={styles.logo}
           onError={(error) => console.error('Error al cargar la imagen', error)}
         />
+        <TouchableOpacity style={styles.changeLogoButton}>
+          <Text style={styles.changeLogoText}>Cambiar Logo</Text>
+        </TouchableOpacity>
+
+        {/* Fecha y botones */}
+        <View style={styles.dateContainer}>
+          <TouchableOpacity style={styles.dateButton}>
+            <Text style={styles.dateButtonText}>←</Text>
+          </TouchableOpacity>
+          <Text style={styles.dateText}>25 Junio 2024</Text>
+          <TouchableOpacity style={styles.dateButton}>
+            <Text style={styles.dateButtonText}>→</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.reloadButton}>
+            <Text style={styles.dateButtonText}>⟳</Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Tabla */}
         <ScrollView style={styles.tableContainer}>
@@ -45,6 +69,11 @@ const HomeScreen = ({ navigation }) => {
           ))}
         </ScrollView>
       </View>
+
+      {/* Botón flotante */}
+      <TouchableOpacity style={styles.fab} onPress={() => { /* lógica para añadir nueva actividad */ }}>
+        <Text style={styles.fabIcon}>+</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -52,19 +81,19 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'lightgrey',
+    backgroundColor: '#ffffff',
   },
   appbar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'blue',
+    backgroundColor: '#007bff',
     paddingHorizontal: 15,
     paddingVertical: 10,
-    paddingTop: 50, // Added padding to avoid overlapping with status bar
+    paddingTop: 50,
   },
   menuButton: {
-    width: 30, // Ensures space for the icon
+    width: 30,
   },
   menuIcon: {
     color: 'white',
@@ -74,37 +103,76 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
-    flex: 1,
     textAlign: 'center',
   },
   rightSpace: {
-    width: 30, // Ensures an equivalent empty space on the right
+    flexDirection: 'row',
+    width: 60,
+    justifyContent: 'space-between',
+  },
+  icon: {
+    color: 'white',
+    fontSize: 24,
   },
   content: {
     flex: 1,
     alignItems: 'center',
     paddingVertical: 20,
-    backgroundColor: 'white',
-    marginTop: 10, // Adjust content to start below the Appbar
+    backgroundColor: '#ffffff',
   },
   logo: {
-    width: 150,
-    height: 150,
+    width: 200,
+    height: 200,
     marginBottom: 20,
-    borderWidth: 1,
-    borderColor: 'red',
+  },
+  changeLogoButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginBottom: 20,
+  },
+  changeLogoText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  dateContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  dateButton: {
+    backgroundColor: '#007bff',
+    padding: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+  },
+  reloadButton: {
+    backgroundColor: '#007bff',
+    padding: 10,
+    borderRadius: 5,
+    marginLeft: 10,
+  },
+  dateButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  dateText: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   tableContainer: {
     width: '90%',
   },
   tableHeader: {
     flexDirection: 'row',
-    backgroundColor: '#f1f8ff',
+    backgroundColor: '#007bff',
     padding: 10,
   },
   tableHeaderCell: {
     flex: 1,
     fontWeight: 'bold',
+    color: 'white',
   },
   tableRow: {
     flexDirection: 'row',
@@ -114,6 +182,23 @@ const styles = StyleSheet.create({
   },
   tableCell: {
     flex: 1,
+    textAlign: 'center',
+  },
+  fab: {
+    position: 'absolute',
+    width: 60,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 30,
+    bottom: 30,
+    backgroundColor: '#007bff',
+    borderRadius: 30,
+    elevation: 8,
+  },
+  fabIcon: {
+    fontSize: 30,
+    color: 'white',
   },
 });
 

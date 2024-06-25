@@ -29,6 +29,11 @@ const ServiceOrdersScreen = () => {
   ]);
 
   const handleInputChange = (name, value) => {
+    // Validar campos numéricos y de teléfono
+    if (name === 'telefonoFirma' || name === 'precio') {
+      const numberRegex = /^[0-9]*$/;
+      if (!numberRegex.test(value)) return;
+    }
     setFormData({
       ...formData,
       [name]: value,
@@ -113,10 +118,11 @@ const ServiceOrdersScreen = () => {
     container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
     head: { height: 40, backgroundColor: '#f1f8ff', flexDirection: 'row' },
     text: { margin: 6 },
-    title: { fontSize: 20, fontWeight: 'bold', marginBottom: 10 },
+    title: { fontSize: 20, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' },
     row: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#c8e1ff' },
-    cell: { flex: 1, padding: 10, borderWidth: 1, borderColor: '#c8e1ff' },
-    addButton: { marginTop: 20, padding: 10, backgroundColor: '#007bff', borderRadius: 5 },
+    cell: { padding: 10, borderWidth: 1, borderColor: '#c8e1ff', textAlign: 'center', width: 100 },
+    cellWide: { padding: 10, borderWidth: 1, borderColor: '#c8e1ff', textAlign: 'center', width: 150 },
+    addButton: { marginTop: 20, padding: 10, backgroundColor: '#007bff', borderRadius: 5, alignSelf: 'center' },
     addButtonText: { color: '#fff', textAlign: 'center' },
     editButton: { padding: 10, backgroundColor: '#ffc107', borderRadius: 5, marginHorizontal: 5 },
     editButtonText: { color: '#fff', textAlign: 'center' },
@@ -136,26 +142,30 @@ const ServiceOrdersScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Órdenes de Servicio</Text>
-      <View style={styles.head}>
-        {tableHead.map((header, index) => (
-          <Text key={index} style={styles.cell}>{header}</Text>
-        ))}
-      </View>
-      {data.map((rowData, rowIndex) => (
-        <View key={rowIndex} style={styles.row}>
-          {Object.values(rowData).map((cellData, cellIndex) => (
-            <Text key={cellIndex} style={styles.cell}>{cellData}</Text>
-          ))}
-          <View style={{ flexDirection: 'row' }}>
-            <TouchableOpacity style={styles.editButton} onPress={() => handleEditOrder(rowIndex)}>
-              <Text style={styles.editButtonText}>Editar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteOrder(rowIndex)}>
-              <Text style={styles.deleteButtonText}>Eliminar</Text>
-            </TouchableOpacity>
+      <ScrollView horizontal={true}>
+        <View>
+          <View style={styles.head}>
+            {tableHead.map((header, index) => (
+              <Text key={index} style={index === 2 ? styles.cellWide : styles.cell}>{header}</Text>
+            ))}
           </View>
+          {data.map((rowData, rowIndex) => (
+            <View key={rowIndex} style={styles.row}>
+              {Object.keys(rowData).map((cellKey, cellIndex) => (
+                <Text key={cellIndex} style={cellKey === 'cliente' ? styles.cellWide : styles.cell}>{rowData[cellKey]}</Text>
+              ))}
+              <View style={{ flexDirection: 'row' }}>
+                <TouchableOpacity style={styles.editButton} onPress={() => handleEditOrder(rowIndex)}>
+                  <Text style={styles.editButtonText}>Editar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteOrder(rowIndex)}>
+                  <Text style={styles.deleteButtonText}>Eliminar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
         </View>
-      ))}
+      </ScrollView>
       <TouchableOpacity style={styles.addButton} onPress={() => setShowModal(true)}>
         <Text style={styles.addButtonText}>Agregar Orden</Text>
       </TouchableOpacity>
@@ -170,6 +180,7 @@ const ServiceOrdersScreen = () => {
                 style={styles.formInput}
                 value={formData.cliente}
                 onChangeText={(value) => handleInputChange('cliente', value)}
+                placeholder="Nombre del Cliente"
               />
             </View>
             <View style={styles.formField}>
@@ -178,6 +189,7 @@ const ServiceOrdersScreen = () => {
                 style={styles.formInput}
                 value={formData.servicio}
                 onChangeText={(value) => handleInputChange('servicio', value)}
+                placeholder="Descripción del Servicio Realizado"
               />
             </View>
             <View style={styles.formField}>
@@ -186,6 +198,8 @@ const ServiceOrdersScreen = () => {
                 style={styles.formInput}
                 value={formData.precio}
                 onChangeText={(value) => handleInputChange('precio', value)}
+                keyboardType="numeric"
+                placeholder="Precio del Servicio"
               />
             </View>
             <View style={styles.formField}>
@@ -194,6 +208,7 @@ const ServiceOrdersScreen = () => {
                 style={styles.formInput}
                 value={formData.productos}
                 onChangeText={(value) => handleInputChange('productos', value)}
+                placeholder="Productos Utilizados en el Servicio"
               />
             </View>
             <View style={styles.formField}>
@@ -270,6 +285,7 @@ const ServiceOrdersScreen = () => {
                 style={styles.formInput}
                 value={formData.actividades}
                 onChangeText={(value) => handleInputChange('actividades', value)}
+                placeholder="Actividades Realizadas"
               />
             </View>
             <View style={styles.formField}>
@@ -278,6 +294,7 @@ const ServiceOrdersScreen = () => {
                 style={styles.formInput}
                 value={formData.recomendaciones}
                 onChangeText={(value) => handleInputChange('recomendaciones', value)}
+                placeholder="Recomendaciones"
               />
             </View>
             <View style={styles.formField}>
@@ -286,6 +303,7 @@ const ServiceOrdersScreen = () => {
                 style={styles.formInput}
                 value={formData.nombreFirma}
                 onChangeText={(value) => handleInputChange('nombreFirma', value)}
+                placeholder="Nombre para la Firma"
               />
             </View>
             <View style={styles.formField}>
@@ -294,6 +312,8 @@ const ServiceOrdersScreen = () => {
                 style={styles.formInput}
                 value={formData.telefonoFirma}
                 onChangeText={(value) => handleInputChange('telefonoFirma', value)}
+                keyboardType="numeric"
+                placeholder="Teléfono de Contacto"
               />
             </View>
             <View style={styles.formField}>
@@ -302,6 +322,8 @@ const ServiceOrdersScreen = () => {
                 style={styles.formInput}
                 value={formData.correoFirma}
                 onChangeText={(value) => handleInputChange('correoFirma', value)}
+                keyboardType="email-address"
+                placeholder="Correo Electrónico"
               />
             </View>
             <View style={styles.formField}>
@@ -310,6 +332,7 @@ const ServiceOrdersScreen = () => {
                 style={styles.formInput}
                 value={formData.direccionFirma}
                 onChangeText={(value) => handleInputChange('direccionFirma', value)}
+                placeholder="Dirección"
               />
             </View>
             <TouchableOpacity style={styles.submitButton} onPress={handleAddOrder}>
